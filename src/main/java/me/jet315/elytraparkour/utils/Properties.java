@@ -10,6 +10,8 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.cryptomorin.xseries.XSound;
+
 public class Properties extends DataFile{
 
     /**
@@ -85,17 +87,17 @@ public class Properties extends DataFile{
         lastRingBoost = config.getDouble("lastRingBoost");
         
         try {
-        	firstRingSound = Sound.valueOf(config.getString("FirstRingSound"));
+        	firstRingSound = XSound.matchXSound(config.getString("FirstRingSound")).get().parseSound();
         }catch (IllegalArgumentException e) {
         	firstRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }
         try {
-        	defaultRingSound = Sound.valueOf(config.getString("DefaultRingSound"));           
+        	defaultRingSound = XSound.matchXSound(config.getString("DefaultRingSound")).get().parseSound();
         }catch (IllegalArgumentException e) {
         	defaultRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }
         try {
-        	lastRingSound = Sound.valueOf(config.getString("LastRingSound"));
+        	lastRingSound = XSound.matchXSound(config.getString("LastRingSound")).get().parseSound();
         }catch (IllegalArgumentException e) {
         	lastRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }

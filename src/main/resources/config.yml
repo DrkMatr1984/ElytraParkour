@@ -60,12 +60,12 @@ TeleportToMapSpawnIfStopsGliding: true
 #replace %PREFIX% with the prefix, type "none" if you do not want a message shown
 StopGlidingMessage: "%PREFIX%&aYou need to keep moving!"
 
-#If they touch ground during a course, should we teleport them to the maps spawn?
+#If they touch ground during a course, should we teleport them to the maps spawn? (If Enabled, uses a bit more resources)
 TeleportToMapSpawnIfTouchGround: true
 #replace %PREFIX% with the prefix, type "none" if you do not want a message shown
 TouchGroundMessage: "%PREFIX%&aYou cannot touch the ground during a course!"
 
-#If they fall into the void during a course, should we teleport them to the maps spawn?
+#If they fall into the void during a course, should we teleport them to the maps spawn? (If Enabled, uses a bit more resources)
 TeleportToMapSpawnIfFallsInVoid: true
 #replace %PREFIX% with the prefix, type "none" if you do not want a message shown
 FallsInVoidMessage: "%PREFIX%&aYou Fell into the Void!"
