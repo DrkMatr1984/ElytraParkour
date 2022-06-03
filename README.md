@@ -5,6 +5,7 @@ https://www.spigotmc.org/resources/authors/jet315.15295/
 Larger Plugins may be a standalone repository.
 All plugins use the Java Programing language.
 
+# ElytraParkour
 This in particular is an up-to-date version of ElytraParkour with a few added options.
 * Run commands at completion of map
 * Check if player is on ground and send them back to map spawn
