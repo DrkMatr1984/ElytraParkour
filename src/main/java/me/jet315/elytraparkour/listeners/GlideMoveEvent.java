@@ -1,5 +1,7 @@
 package me.jet315.elytraparkour.listeners;
 
+import me.jet315.elytraparkour.utils.CommandTask;
+import me.jet315.elytraparkour.utils.CommandTask.RunLevel;
 import me.jet315.elytraparkour.Core;
 import me.jet315.elytraparkour.events.RingEnterEvent;
 import me.jet315.elytraparkour.manager.ElytraMap;
@@ -14,6 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GlideMoveEvent implements Listener {
 
@@ -28,7 +31,6 @@ public class GlideMoveEvent implements Listener {
                 if(dontCheckPlayer.contains(p)) return;
                 ElytraPlayer elytraPlayer = Core.getInstance().getElytraManager().getElytraPlayers().get(p);
                 if (elytraPlayer != null) {
-
                     if (elytraPlayer.isInMap()) {
                         //check to see if at their portal
                         ElytraMap map = elytraPlayer.getMap();
@@ -53,7 +55,9 @@ public class GlideMoveEvent implements Listener {
                                     if(!Core.getInstance().getProperties().getMessageToSendWhenReachLastRing().equalsIgnoreCase("none")){
                                         p.sendMessage(Core.getInstance().getProperties().getMessageToSendWhenReachLastRing().replaceAll("%PREFIX%",Core.getInstance().getProperties().getPluginsPrefix()).replaceAll("%MAP%",map.getId()));
                                     }
-
+                                    if(!Core.getInstance().getProperties().getCommandsToRunWhenReachLastRing().isEmpty()) {
+                                    	doCommands(p, Core.getInstance().getProperties().getCommandsToRunWhenReachLastRing());
+                                    }
                                     elytraPlayer.setRingNumber(-1);
                                     elytraPlayer.setInMap(false);
                                     return;
@@ -75,24 +79,25 @@ public class GlideMoveEvent implements Listener {
                     }
                     //check if at starting ring
                     for (ElytraMap map : Core.getInstance().getElytraManager().getActiveMaps().values()) {
-                        if (p.getLocation().distance(map.getStartingRing().getCenterOfRing()) <= map.getStartingRing().getRadius()) {
-
-                            //Create, and trigger the Ring Event
-                            RingEnterEvent ringEnterEvent = new RingEnterEvent(p,map.getStartingRing());
-                            Core.getInstance().getServer().getPluginManager().callEvent(ringEnterEvent);
-                            if(!ringEnterEvent.isCancelled()) {
-                            	p.setVelocity(p.getLocation().getDirection().multiply(Core.getInstance().getProperties().getFirstRingBoost()));
-                                p.playSound(p.getLocation(), Core.getInstance().getProperties().getFirstRingSound(), 100, 100);
-                                p.spawnParticle(Core.getInstance().getProperties().getFirstRingParticles(), p.getLocation(), 30, 0, 0, 0, 0);
-                                if(!Core.getInstance().getProperties().getFirstRingMessage().equalsIgnoreCase("none")){
-                                    p.sendMessage(Core.getInstance().getProperties().getFirstRingMessage().replaceAll("%PREFIX%",Core.getInstance().getProperties().getPluginsPrefix()).replaceAll("%MAP%",map.getId()));
-                                }
-                                elytraPlayer.setRingNumber(0);
-                                elytraPlayer.setInMap(true);
-                                elytraPlayer.setMap(map);
-                                refreshPlayer(p,(int)map.getStartingRing().getRadius());
-                            }
-                        }
+                    	if(map.getStartingRing() != null) {
+	                        if (p.getLocation().distance(map.getStartingRing().getCenterOfRing()) <= map.getStartingRing().getRadius()) {
+	                            //Create, and trigger the Ring Event
+	                            RingEnterEvent ringEnterEvent = new RingEnterEvent(p,map.getStartingRing());
+	                            Core.getInstance().getServer().getPluginManager().callEvent(ringEnterEvent);
+	                            if(!ringEnterEvent.isCancelled()) {
+	                            	p.setVelocity(p.getLocation().getDirection().multiply(Core.getInstance().getProperties().getFirstRingBoost()));
+	                                p.playSound(p.getLocation(), Core.getInstance().getProperties().getFirstRingSound(), 100, 100);
+	                                p.spawnParticle(Core.getInstance().getProperties().getFirstRingParticles(), p.getLocation(), 30, 0, 0, 0, 0);
+	                                if(!Core.getInstance().getProperties().getFirstRingMessage().equalsIgnoreCase("none")){
+	                                    p.sendMessage(Core.getInstance().getProperties().getFirstRingMessage().replaceAll("%PREFIX%",Core.getInstance().getProperties().getPluginsPrefix()).replaceAll("%MAP%",map.getId()));
+	                                }
+	                                elytraPlayer.setRingNumber(0);
+	                                elytraPlayer.setInMap(true);
+	                                elytraPlayer.setMap(map);
+	                                refreshPlayer(p,(int)map.getStartingRing().getRadius());
+	                            }
+	                        }
+                    	}
                     }
                 }
             }
@@ -109,5 +114,35 @@ public class GlideMoveEvent implements Listener {
                 dontCheckPlayer.remove(p);
             }
         },5 + elytraRadius);
+    }
+    
+    private void doCommands(Player p, List<String> commandList)
+    {
+  	Long delay = 10L;	
+      for (String com : commandList) {
+      	if (com != null) {
+      		RunLevel level = RunLevel.PLAYER;
+  			if (com.contains("%player%")) {
+  				com = com.replace("%player%", p.getName());
+      		}
+      		if(com.length() >= 1){
+      			char c = com.charAt(0);
+      			if (c == '!' || c == '~') {
+      				if (c =='!') {
+      					level = RunLevel.OP;
+      				}
+      				if (c == '~') {
+      					level = RunLevel.CONSOLE;
+      				}
+      				com = com.substring(1);
+      				
+      			}
+      		}
+      		if (com != null) {
+      			new CommandTask(level, Core.getInstance(), p, com).runTaskLater(Core.getInstance(), delay);
+      			delay = delay + 20L;
+      		}
+      	}
+      }
     }
 }

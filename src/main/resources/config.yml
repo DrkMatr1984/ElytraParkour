@@ -31,10 +31,10 @@ FirstRingBoost: 1.5
 DefaultRingBoost: 1.3
 LastRingBoost: 0
 
-#Sounds - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html (must be a valid sound) type 'null' if you do not want a sound played
-FirstRingSound: BLOCK_NOTE_PLING
-DefaultRingSound: BLOCK_NOTE_PLING
-LastRingSound: BLOCK_NOTE_PLING
+#Sounds - https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html (must be a valid sound) type 'null' if you do not want a sound played
+FirstRingSound: BLOCK_NOTE_BLOCK_PLING
+DefaultRingSound: BLOCK_NOTE_BLOCK_PLING
+LastRingSound: BLOCK_NOTE_BLOCK_PLING
 
 #feet particles (shown when they enter a ring) - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html (must be a valid particle) type 'null' if you do not want a particle to be displayed
 #What Particles would you like the first ring to be?
@@ -51,11 +51,24 @@ FirstRingMessage: "%PREFIX%&aYou have started the map &c%MAP%&a!"
 TeleportToMapSpawnAtLastRing: true
 #replace %PREFIX% with the prefix, replace %MAP% with the Map name, type "none" if you do not want a message shown
 MessageToSendWhenReachedLastRing: "%PREFIX%&aCongratulations, &dyou have finished the map &c%MAP%"
+#replace %player% with player name, Prefix a Command with ! to run the command as the player with OP, Prefix a Command with ~ To run the command as the console, set to [] to disable
+CommandsToRunWhenPlayerReachedLastRing:
+- "~say Congrats!"
 
 #If they stop gliding during a course, should we teleport them to the maps spawn?
 TeleportToMapSpawnIfStopsGliding: true
 #replace %PREFIX% with the prefix, type "none" if you do not want a message shown
 StopGlidingMessage: "%PREFIX%&aYou need to keep moving!"
+
+#If they touch ground during a course, should we teleport them to the maps spawn?
+TeleportToMapSpawnIfTouchGround: true
+#replace %PREFIX% with the prefix, type "none" if you do not want a message shown
+TouchGroundMessage: "%PREFIX%&aYou cannot touch the ground during a course!"
+
+#If they fall into the void during a course, should we teleport them to the maps spawn?
+TeleportToMapSpawnIfFallsInVoid: true
+#replace %PREFIX% with the prefix, type "none" if you do not want a message shown
+FallsInVoidMessage: "%PREFIX%&aYou Fell into the Void!"
 
 #No permission message
 NoPermissions: "%PREFIX%&cYou do not have permission for this command!"

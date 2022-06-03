@@ -1,6 +1,10 @@
 package me.jet315.elytraparkour.utils;
 
 import me.jet315.elytraparkour.Core;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -42,10 +46,17 @@ public class Properties extends DataFile{
 
     private boolean teleportToMapSpawnAtLastRing = true;
     private String messageToSendWhenReachLastRing = "Fini!";
+    private List<String> commandsToRunWhenReachLastRing = new ArrayList<String>();
 
     private boolean teleportToMapSpawnIfStopsGliding = true;
     private String stopGlidingMessage = "Keep moving!";
-
+    
+    private boolean teleportToMapSpawnIfFallsInVoid = true;
+    private String fallsInVoidMessage = "Fell in void!";
+    
+    private boolean teleportToMapSpawnIfTouchGround = true;
+    private String touchGroundMessage = "Touched Ground!";
+    
     private String noPermissions = "No perms!";
 
     private String firstRingMessage = "First ring!";
@@ -68,25 +79,56 @@ public class Properties extends DataFile{
         additionalSpawnRings = config.getInt("AdditionalSpawnRings");
 
         additionalPlayerRings = config.getInt("RingsInfrontOfPlayer");
-
+        
         firstRingBoost = config.getDouble("FirstRingBoost");
         defaultRingBoost = config.getDouble("defaultRingBoost");
         lastRingBoost = config.getDouble("lastRingBoost");
-
-        firstRingSound = Sound.valueOf(config.getString("FirstRingSound"));
-        defaultRingSound = Sound.valueOf(config.getString("DefaultRingSound"));
-        lastRingSound = Sound.valueOf(config.getString("LastRingSound"));
-
-        firstRingFeetParticles = Particle.valueOf(config.getString("FirstRingFeetParticles"));
-        defaultRingFeetParticles = Particle.valueOf(config.getString("DefaultRingFeetParticles"));
-        lastRingFeetParticles = Particle.valueOf(config.getString("LastRingFeetParticles"));
-
+        
+        try {
+        	firstRingSound = Sound.valueOf(config.getString("FirstRingSound"));
+        }catch (IllegalArgumentException e) {
+        	firstRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
+        }
+        try {
+        	defaultRingSound = Sound.valueOf(config.getString("DefaultRingSound"));           
+        }catch (IllegalArgumentException e) {
+        	defaultRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
+        }
+        try {
+        	lastRingSound = Sound.valueOf(config.getString("LastRingSound"));
+        }catch (IllegalArgumentException e) {
+        	lastRingSound = Sound.BLOCK_NOTE_BLOCK_PLING;
+        }
+        
+        try {
+        	firstRingFeetParticles = Particle.valueOf(config.getString("FirstRingFeetParticles"));
+        }catch (IllegalArgumentException e) {
+        	firstRingFeetParticles = Particle.FLAME;
+        }
+        try {
+        	defaultRingFeetParticles = Particle.valueOf(config.getString("DefaultRingFeetParticles"));
+        }catch (IllegalArgumentException e) {
+        	defaultRingFeetParticles = Particle.DRAGON_BREATH;
+        }
+        try {
+        	lastRingFeetParticles = Particle.valueOf(config.getString("LastRingFeetParticles"));
+        }catch (IllegalArgumentException e) {
+        	lastRingFeetParticles = Particle.VILLAGER_HAPPY;
+        }
 
         teleportToMapSpawnAtLastRing = config.getBoolean("TeleportToMapSpawnAtLastRing");
         messageToSendWhenReachLastRing = ChatColor.translateAlternateColorCodes('&',config.getString("MessageToSendWhenReachedLastRing"));
+        if(config.getStringList("CommandsToRunWhenPlayerReachedLastRing")!=null)
+            commandsToRunWhenReachLastRing = config.getStringList("CommandsToRunWhenPlayerReachedLastRing");
 
         teleportToMapSpawnIfStopsGliding = config.getBoolean("TeleportToMapSpawnIfStopsGliding");
         stopGlidingMessage = ChatColor.translateAlternateColorCodes('&',config.getString("StopGlidingMessage"));
+        
+        teleportToMapSpawnIfFallsInVoid = config.getBoolean("TeleportToMapSpawnIfFallsInVoid");
+        fallsInVoidMessage = ChatColor.translateAlternateColorCodes('&',config.getString("FallsInVoidMessage"));
+        
+        teleportToMapSpawnIfTouchGround = config.getBoolean("TeleportToMapSpawnIfTouchGround");
+        touchGroundMessage = ChatColor.translateAlternateColorCodes('&',config.getString("TouchGroundMessage"));
 
         noPermissions = ChatColor.translateAlternateColorCodes('&',config.getString("NoPermissions"));
 
@@ -196,4 +238,24 @@ public class Properties extends DataFile{
     public String getFirstRingMessage() {
         return firstRingMessage;
     }
+
+	public boolean isTeleportToMapSpawnIfFallsInVoid() {
+		return teleportToMapSpawnIfFallsInVoid;
+	}
+
+	public String getFallsInVoidMessage() {
+		return fallsInVoidMessage;
+	}
+
+	public boolean isTeleportToMapSpawnIfTouchGround() {
+		return teleportToMapSpawnIfTouchGround;
+	}
+
+	public String getTouchGroundMessage() {
+		return touchGroundMessage;
+	}
+
+	public List<String> getCommandsToRunWhenReachLastRing() {
+		return commandsToRunWhenReachLastRing;
+	}
 }
